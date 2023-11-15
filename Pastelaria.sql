@@ -1,66 +1,50 @@
 create database Pastelaria;
-use  Pastelaria;
-
+use Pastelaria;
 
 create table Clientes(
-id_cliente int(11) not null auto_increment primary key,
-nome varchar (100)not null,
-telefone varchar (15) not null
+id_cliente int not null auto_increment,
+nome_completo varchar(100) not null,
+preferia_por_nome varchar(100) not null,
+cpf int(11)  unique,
+data_nacimento date,
+telefone int(8) unique,
+e_mail varchar(100) unique,
+bairro varchar(100) not null,
+cidade varchar(100) not null,
+estado varchar(100) not null,
+primary key (id_cliente)
 );
 
-create table Enderecos(
-id_endereco int not null primary key auto_increment,
-bairro varchar(50) not null,
-ceep varchar(8)null,
-logradouro varchar (50)not null,
-numero varchar(10)not null,
-id_cliente int not null
-);
-create table pedidos(
-id_pedido int (11) not null primary key auto_increment,
-id_cliente int not null
+create table Pedidos(
+id_pedidos int primary key  auto_increment,
+id_cliente int,
+id_pasteis int,
+quantidade int not null,
+data_pedido date,
+foreign key (id_cliente) references Clientes(id_cliente),
+foreign key(id_pasteis)  references Pasteis(id_pasteis)
 );
 
- create table itens_do_pedidos(
- id_itens_do_pedido int (11) not null primary key auto_increment,
-    id_pedido int not null,
-    id_produto int not null
-    );
-    
-    
-    create table produtos(
-     id_produto int (11) not null primary key auto_increment,
-     id_bebidas int not null
-     );
-     
-     
-     
-     create table bebidas(
-     id_bebida int (11) not null primary key auto_increment,
-     preco float(11)  not null,
-     nome varchar(100)
-    );
-    create table pasteis(
-    id_pasteis int (11) not null primary key auto_increment,
-    preco float(11)  not null,
-    nome varchar(100),
-    id_bebida  int not null
-    );
-    
-   
-    
-    
-    CREATE TABLE categoria (
-    id_categoria int (11) not null primary key auto_increment,
-    comum VARCHAR(100) NOT NULL,
-    vegano VARCHAR(100) NOT NULL
-    
+create table Categorias(
+id_categoria int not null auto_increment,
+nome_categoria varchar(50) not null,
+primary key (id_categoria)
+);
 
-    );
-     create table ingredientes(
-     id_grediente int (11) not null primary key auto_increment,
-     nome VARCHAR(100) NOT NULL
-     );
+create table Recheios(
+id_recheios int not null auto_increment,
+nome_recheio varchar(100) not null,
+id_categoria int,
+primary key (id_recheios),
+foreign key(id_categoria) references Categorias(id_categoria)
+);
 
-
-     //agora fazer os relacionamento
+create table Pasteis(
+id_pasteis int not null auto_increment,
+nome_pastel varchar(100) not null,
+tamanho_pastel varchar(20) not null,
+preco decimal(10,2) not null,
+id_recheios int not null,
+primary key(id_pasteis),
+foreign key(id_recheios) references Recheios(id_recheios)
+);
