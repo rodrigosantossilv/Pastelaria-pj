@@ -47,4 +47,4 @@ preco decimal(10,2) not null,
 id_recheios int not null,
 primary key(id_pasteis),
 foreign key(id_recheios) references Recheios(id_recheios)
-);
+);como colocar o github em portugues 
