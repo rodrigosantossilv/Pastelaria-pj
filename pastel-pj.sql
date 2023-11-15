@@ -19,7 +19,7 @@ create table Pedidos(
 id_pedidos int primary key  auto_increment,
 id_cliente int,
 id_pasteis int,
-quantidade int not null,
+quantidade int ,
 data_pedido date,
 foreign key (id_cliente) references Clientes(id_cliente),
 foreign key(id_pasteis)  references Pasteis(id_pasteis)
