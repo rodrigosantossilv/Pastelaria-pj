@@ -52,8 +52,8 @@ foreign key(id_recheios) references Recheios(id_recheios)
 
 create table itens_do_pedidos(
  id_itens_do_pedido int  not null primary key auto_increment,
-    id_pedido int not null,
-    id_produto int not null,
+    id_pedidos int not ,
+    id_produto int not ,
 	quantidade_itens_pedidos int not null,
      foreign key(id_pedidos) references Pedidos(id_pedidos)
     );
@@ -63,13 +63,16 @@ CREATE TABLE Bebidas (
     id_bebida int not null primary key auto_increment,
     nome  varchar(100),
     preco decimal(10,2) not null,
-    quantidade int not null,
+    quantidade int not null default 0,
+    id_categoria int,
     foreign key(id_categoria) references Categorias(id_categoria)
 );
 
 CREATE TABLE FormasPagamento (
     id_forma_pagamento int not null primary key auto_increment,
     nome_forma_pagamento varchar(100),
+    id_pedidos int,
+    id_itens_do_pedido int,
     foreign key(id_pedidos) references Pedidos(id_pedidos),
     foreign key (id_itens_do_pedido) references itens_do_pedidos(id_itens_do_pedido)
 
