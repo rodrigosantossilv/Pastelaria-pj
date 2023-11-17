@@ -17,9 +17,9 @@ primary key (id_cliente)
 
 create table Pedidos(
 id_pedidos int primary key  auto_increment,
-id_cliente int,
-id_pasteis int,
-quantidade int ,
+id_cliente int not null,
+id_pasteis int not null,
+quantidade int not null,
 data_pedido date,
 foreign key (id_cliente) references Clientes(id_cliente),
 foreign key(id_pasteis)  references Pasteis(id_pasteis)
@@ -34,7 +34,7 @@ primary key (id_categoria)
 create table Recheios(
 id_recheios int not null auto_increment,
 nome_recheio varchar(100) not null,
-id_categoria int,
+id_categoria int not null,
 primary key (id_recheios),
 foreign key(id_categoria) references Categorias(id_categoria)
 );
@@ -64,7 +64,7 @@ CREATE TABLE Bebidas (
     nome  varchar(100),
     preco decimal(10,2) not null,
     quantidade int not null default 0,
-    id_categoria int,
+    id_categoria int not null,
     foreign key(id_categoria) references Categorias(id_categoria)
 );
 
