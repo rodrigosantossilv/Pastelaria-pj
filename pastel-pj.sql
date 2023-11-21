@@ -9,10 +9,18 @@ cpf int(11)  unique,
 data_nacimento date,
 telefone int(8) unique,
 e_mail varchar(100) unique,
-bairro varchar(100) not null,
-cidade varchar(100) not null,
-estado varchar(100) not null,
 primary key (id_cliente)
+);
+
+create table Endereco(
+id_endereco int not null auto_increment,
+bairro varchar(50),
+logradouro VARCHAR(50),
+numero VARCHAR(10),
+cep VARCHAR(8),
+municipio VARCHAR(50),
+uf char (2),
+primary key (id_endereco)
 );
 
 create table Pedidos(
@@ -77,4 +85,34 @@ CREATE TABLE FormasPagamento (
     foreign key (id_itens_do_pedido) references itens_do_pedidos(id_itens_do_pedido)
 
 );
+delimiter $$
+CREATE PROCEDURE cadastrar_cliente(
+in nome_completo varchar(100),
+in preferia_por_nome varchar(100),
+in e_mail varchar(100),
+in telefone varchar(15),
+in cpf char(14),
+in bairro varchar(50),
+in numero varchar(10),
+in cep varchar(8),
+in municipio varchar(50),
+in uf char(2)
+)
+begin
+      DECLARE  codigo_cliente int;
 
+ start transaction;
+ insert into Clientes(nome_completo,preferia_por_nome,e_mail,telefone,cpf)
+ values (nome_completo,preferia_por_nome,e_mail,telefone,cpf);
+ 
+ set  codigo_cliente = last_insert_id();
+ 
+ insert into Endereco(bairro,numero,cep,municipio,uf, codigo_cliente)
+ values(bairro,numero,cep,municipio,uf, codigo_cliente);
+ commit;
+end;
+$$
+
+call cadastrar_cliente('Rodrigo da silva','Rodri','rodrigo@gmail.com','759859580','349895851','Humildes','365','444-000','FSA','BA');
+ 
+#DA PARTE DO PRECEDURE ATE CALL ESTA CONSTRUÇAO AINDA CODIGO AINDA EM CODIFICAÇAO POR RODRIGO NAO ALTERA !!!!
