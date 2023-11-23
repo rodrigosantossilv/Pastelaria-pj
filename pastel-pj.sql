@@ -15,11 +15,11 @@ primary key (id_cliente)
 create table Endereco(
 id_endereco int not null auto_increment,
 bairro varchar(50),
-logradouro VARCHAR(50),
 numero VARCHAR(10),
 cep VARCHAR(8),
 municipio VARCHAR(50),
 uf char (2),
+foreign key (id_cliente) references Clientes(id_cliente),
 primary key (id_endereco)
 );
 
