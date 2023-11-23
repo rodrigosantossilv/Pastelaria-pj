@@ -43,13 +43,15 @@ primary key (id_categoria)
 create table recheios(
 id_recheios int not null auto_increment,
 nome_recheio varchar(100) not null,
+id_pastel varchar(100) not null,
 id_categoria int not null,
 primary key (id_recheios),
-foreign key(id_categoria) references Categorias(id_categoria)
+foreign key(id_categoria) references categorias(id_categoria),
+foreign key(id_pastel) references pasteis(id_pastel),    
 );
 
 create table pasteis(
-id_pasteis int not null auto_increment,
+id_pastel int not null auto_increment,
 nome_pastel varchar(100) not null,
 quant_estoque varchar(100) not null, 
 tamanho_pastel varchar(20) not null,
