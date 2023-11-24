@@ -32,14 +32,7 @@ id_cliente int not null,
 forma_pagamento varchar(20),
 foreign key(id_cliente) references cliente(id_cliente)
 );
-CREATE TABLE itens_pedido(
-id_item int primary key auto_increment,
-id_pedido int not null,
-id_produto int not null,
-quantidade int not null,
-foreign key(id_pedido)references pedidos(id_pedido),
-foreign key(id_produto)references produto(id_produto)
-);
+
 CREATE TABLE produto(
 id_produto int primary key auto_increment,
 nome varchar(50),
@@ -48,6 +41,14 @@ volume varchar(20),
 tipo varchar(20)
 );
 
+CREATE TABLE itens_pedido(
+id_item int primary key auto_increment,
+id_pedido int not null,
+id_produto int not null,
+quantidade int not null,
+foreign key(id_pedido)references pedidos(id_pedido),
+foreign key(id_produto)references produto(id_produto)
+);
 
 DELIMITER //
 
