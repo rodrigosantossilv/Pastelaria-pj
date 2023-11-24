@@ -23,7 +23,9 @@ CREATE TABLE pasteis (
     tamanho_pastel VARCHAR(20) NOT NULL,
     preco DECIMAL(10,2) NOT NULL,
     id_recheios INT NOT NULL,
+    id_categoria int not null,
     PRIMARY KEY(id_pastel),
+    FOREIGN KEY(id_categoria) REFERENCES categorias(id_categoria
     FOREIGN KEY(id_recheios) REFERENCES recheios(id_recheios)
 );
 
