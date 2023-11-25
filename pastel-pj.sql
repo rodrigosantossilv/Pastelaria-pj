@@ -306,4 +306,16 @@ COMMIT;
 select * from pedidos;
 
 
+SELECT 
+cl.id_cliente,
+cl.nome_completo,
+MONTH(pe.data_pedido) AS mes,
+COUNT(pe.id_pedido) AS total_pedidos
+FROM clientes cl
+JOIN pedidos pe ON cl.id_cliente = pe.id_cliente
+WHERE YEAR(pe.data_pedido) = YEAR(CURDATE())
+GROUP BY cl.id_cliente, mes
+ORDER BY total_pedidos DESC;
+
+
 
