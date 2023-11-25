@@ -318,4 +318,10 @@ GROUP BY cl.id_cliente, mes
 ORDER BY total_pedidos DESC;
 
 
+-- 4 antes que eu me esqueça
+SELECT SUM(preco * quantidade) AS valor_total_venda
+FROM produto
+JOIN itens_pedido ON produto.id_produto = itens_pedido.id_produto;
+
+
 
