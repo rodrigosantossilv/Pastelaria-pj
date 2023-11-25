@@ -104,7 +104,11 @@ values
 ('palmito'),
 ('espinafre'),
 ('camarão'),
-('bacalhau');
+('bacalhau'),
+('Pastel de Queijo e Cheesecake'),
+('Queijo com Goiabada'),
+('Queijo e Milho');
+
 
 
  insert into categoria(nome)
@@ -117,7 +121,7 @@ values
 
 insert into forma_pagamentos(nome)
 values 
-('dinheiro'),('pix'),('cartão');
+('dinheiro'),('pix'),('cartão debito'),('cartão credito';
 
 
 DELIMITER ;
