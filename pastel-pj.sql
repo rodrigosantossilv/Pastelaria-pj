@@ -324,4 +324,11 @@ FROM produto
 JOIN itens_pedido ON produto.id_produto = itens_pedido.id_produto;
 
 
+-- 6 antes que eu me esqueça
+SELECT p.nome AS pastel, COUNT(ip.id_item) AS quantidade_vendas
+FROM produto p
+JOIN itens_pedido ip ON p.id_produto = ip.id_produto
+GROUP BY p.nome
+ORDER BY quantidade_vendas ASC;
+
 
