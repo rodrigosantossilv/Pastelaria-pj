@@ -60,6 +60,35 @@ foreign key(id_pedido)references pedidos(id_pedido),
 foreign key(id_produto)references produto(id_produto)
 );
 
+insert into recheio(nome)
+values 
+('carne'),
+('frango'),
+('queijo'),
+('palmito'),
+('espinafre'),
+('camarão'),
+('bacalhau'),
+('Pastel de Queijo e Cheesecake'),
+('Queijo com Goiabada'),
+('Queijo e Milho');
+
+
+
+ insert into categoria(nome)
+values 
+('simples'),
+('vegano'),
+('vegetariano'),
+('zero lactose'),
+('bebida');
+
+insert into forma_pagamentos(nome)
+values 
+('dinheiro'),('pix'),('cartão debito'),('cartão credito';
+
+
+
 
 DELIMITER //
 CREATE PROCEDURE AdicionarCliente(
@@ -105,33 +134,6 @@ BEGIN
     INSERT INTO produto (nome, preco, tamanho, id_categoria) 
     VALUES (nome, preco, tamanho, id_categoria);
 END //
-
-insert into recheio(nome)
-values 
-('carne'),
-('frango'),
-('queijo'),
-('palmito'),
-('espinafre'),
-('camarão'),
-('bacalhau'),
-('Pastel de Queijo e Cheesecake'),
-('Queijo com Goiabada'),
-('Queijo e Milho');
-
-
-
- insert into categoria(nome)
-values 
-('simples'),
-('vegano'),
-('vegetariano'),
-('zero lactose'),
-('bebida');
-
-insert into forma_pagamentos(nome)
-values 
-('dinheiro'),('pix'),('cartão debito'),('cartão credito';
 
 
 DELIMITER ;
