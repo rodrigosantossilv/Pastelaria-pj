@@ -166,9 +166,6 @@ CALL AdicionaRecheio(6,6);
 CALL AdicionaRecheio(7,7);
 
 
-
-CALL AdicionarCliente('Rodrigo da Silva', 'Rodrigo', '123.456.789-01', '2005-05-09', '123456789', 'rodrigo@email.com', 'humildes', 'FSA', 'BA');
-
 START TRANSACTION;
 INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (1, 1);
 SET @id_pedido_rodrigo = LAST_INSERT_ID();
