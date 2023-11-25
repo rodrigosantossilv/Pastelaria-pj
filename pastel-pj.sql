@@ -85,7 +85,7 @@ values
 
 insert into forma_pagamentos(nome)
 values 
-('dinheiro'),('pix'),('cartão debito'),('cartão credito';
+('dinheiro'),('pix'),('cartão debito'),('cartão credito');
 
 
 
