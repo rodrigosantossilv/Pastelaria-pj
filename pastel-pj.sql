@@ -81,13 +81,6 @@ DELIMITER ;
 CALL AdicionarCliente('Rodigo da Silva', 'Rodrigo', '123.456.789-01', '2005-05-09', '123456789', 'rodrigo@email.com', 'humildes', 'FSA', 'BA');
 CALL AdicionarCliente('Carlos henrique', 'Carlos', '345.609.456-01', '2003-08-03', '750304859', 'carlos@email.com', 'Aviario', 'FSA', 'BA');
 CALL AdicionarCliente('Yasmin nere', 'Yasmin', '503.987.545-01', '2004-03-14', '75395030', 'carlos@email.com', 'feira 7', 'FSA', 'BA');
-CALL AdicionarCliente('Lucia Oliveira', 'Lucia', '789.456.123-45', '2008-09-25', '987654321', 'lucia@email.com', 'Centro', 'São Paulo', 'SP');
-CALL AdicionarCliente('Pedro Santos', 'Pedro', '987.654.321-01', '2010-03-12', '654321987', 'pedro@email.com', 'Bairro Alegre', 'Rio de Janeiro', 'RJ');
-CALL AdicionarCliente('Camila Silva', 'Camila', '234.567.890-12', '2009-08-18', '876543210', 'camila@email.com', 'Nova Cidade', 'Salvador', 'BA');
-CALL AdicionarCliente('Mateus Oliveira', 'Mateus', '345.678.901-23', '2011-05-07', '543210987', 'mateus@email.com', 'Centro', 'Florianópolis', 'SC');
-CALL AdicionarCliente('Maria da Silva', 'Maria', '789.012.345-67', '1990-02-15', '987654321', 'maria@email.com', 'Centro', 'São Paulo', 'SP');
-CALL AdicionarCliente('João Oliveira', 'João', '456.789.012-34', '1985-07-22', '654321987', 'joao@email.com', 'Morada das alvores', 'Velho', 'RJ');
-CALL AdicionarCliente('Ana Souza', 'Ana', '890.123.456-78', '1988-11-30', '987123654', 'ana@email.com', 'Barauna', 'Fim de Mundo', 'SC');
 
 select*from clientes;
  
@@ -192,114 +185,5 @@ INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_
 INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_1, 12, 1);
 COMMIT;
 
-START TRANSACTION;
-INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (2, 1);
-SET @id_pedido_2 = LAST_INSERT_ID();
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_2, 11, 3);
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_2, 13, 2);
-COMMIT;
-
-START TRANSACTION;
-INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (3, 1);
-SET @id_pedido_3 = LAST_INSERT_ID();
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_3, 14, 1);
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_3, 15, 2);
-COMMIT;
-
-
-START TRANSACTION;
-INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (1, 1);
-SET @id_pedido_4 = LAST_INSERT_ID();
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_4, 10, 1);
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_4, 13, 2);
-COMMIT;
-
--- Pedido 5
-START TRANSACTION;
-INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (2, 1);
-SET @id_pedido_5 = LAST_INSERT_ID();
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_5, 12, 1);
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_5, 14, 1);
-COMMIT;
-
-
-START TRANSACTION;
-INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (3, 1);
-SET @id_pedido_6 = LAST_INSERT_ID();
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_6, 11, 2);
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_6, 15, 1);
-COMMIT;
-
-
-START TRANSACTION;
-INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (1, 1);
-SET @id_pedido_7 = LAST_INSERT_ID();
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_7, 14, 1);
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_7, 16, 1);
-COMMIT;
-
-
-START TRANSACTION;
-INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (2, 1);
-SET @id_pedido_8 = LAST_INSERT_ID();
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_8, 10, 2);
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_8, 12, 1);
-COMMIT;
-
-
-START TRANSACTION;
-INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (3, 1);
-SET @id_pedido_9 = LAST_INSERT_ID();
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_9, 13, 2);
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_9, 15, 1);
-COMMIT;
-
-
-START TRANSACTION;
-INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (1, 1);
-SET @id_pedido_10 = LAST_INSERT_ID();
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_10, 11, 1);
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_10, 16, 2);
-COMMIT;
-
-
-START TRANSACTION;
-INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (2, 1);
-SET @id_pedido_11 = LAST_INSERT_ID();
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_11, 12, 1);
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_11, 13, 1);
-COMMIT;
-
-
-START TRANSACTION;
-INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (3, 1);
-SET @id_pedido_12 = LAST_INSERT_ID();
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_12, 14, 2);
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_12, 15, 1);
-COMMIT;
-
-
-START TRANSACTION;
-INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (1, 1);
-SET @id_pedido_13 = LAST_INSERT_ID();
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_13, 10, 1);
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_13, 12, 1);
-COMMIT;
-
-
-START TRANSACTION;
-INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (2, 1);
-SET @id_pedido_14 = LAST_INSERT_ID();
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_14, 13, 1);
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_14, 15, 2);
-COMMIT;
-
-
-START TRANSACTION;
-INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (3, 1);
-SET @id_pedido_15 = LAST_INSERT_ID();
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_15, 14, 1);
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_15, 16, 1);
-COMMIT;
 
 
