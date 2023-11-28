@@ -352,6 +352,124 @@ WHERE
     AND TIMESTAMPDIFF(YEAR, cl.data_nascimento, CURDATE()) > 18;
 
 
+ SELECT 
+    MONTH(data_pedido) AS mes,
+    YEAR(data_pedido) AS ano,
+    CL.nome_completo AS cliente,
+    COUNT(PE.id_pedido) AS numero_pedidos
+FROM pedidos AS PE
+JOIN clientes AS CL ON PE.id_cliente = CL.id_cliente
+WHERE YEAR(data_pedido) = 2023  -- Substitua 2023 pelo ano desejado
+GROUP BY YEAR(data_pedido), MONTH(data_pedido), CL.id_cliente
+ORDER BY numero_pedidos DESC;
+
+
+-- AJUDA AQUI
+SELECT P.nome AS nome_pastel
+FROM produto AS P
+JOIN recheio_produto AS RP1 ON P.id_produto = RP1.id_produto
+JOIN recheio AS R1 ON RP1.id_recheio = R1.id_recheio AND R1.nome = 'bacon'
+JOIN recheio_produto AS RP2 ON P.id_produto = RP2.id_produto
+JOIN recheio AS R2 ON RP2.id_recheio = R2.id_recheio AND R2.nome = 'queijo'
+WHERE P.id_categoria = 1; -- Substitua pelo ID da categoria desejada
+
+SELECT SUM(preco) AS valor_total_venda
+FROM produto;
+
+
+SELECT p.*
+FROM pedidos p
+WHERE EXISTS (
+    SELECT 1
+    FROM itens_pedido ip
+    JOIN produto pr ON ip.id_produto = pr.id_produto
+    WHERE pr.id_categoria IN (1, 2)  -- IDs das categorias de pastéis
+      AND ip.id_pedido = p.id_pedido
+)
+AND EXISTS (
+    SELECT 1
+    FROM itens_pedido ip2
+    JOIN produto pr2 ON ip2.id_produto = pr2.id_produto
+    WHERE pr2.id_categoria = 5  -- ID da categoria de bebidas
+      AND ip2.id_pedido = p.id_pedido
+);
+
+-- Este gatilho verifica se o cliente tem mais de 18 anos antes de inserir um novo cliente
+DELIMITER //
+CREATE TRIGGER VerificarIdade
+BEFORE INSERT ON clientes
+FOR EACH ROW
+BEGIN
+    IF DATEDIFF(CURRENT_DATE, NEW.data_nascimento) < 6570 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Clientes devem ter pelo menos 18 anos.';
+    END IF;
+END;
+//
+DELIMITER ;
+
+-- Este gatilho atualiza a quantidade em estoque após a inserção de um novo pedido
+DELIMITER //
+CREATE TRIGGER AtualizarEstoque
+AFTER INSERT ON itens_pedido
+FOR EACH ROW
+BEGIN
+    UPDATE produto
+    SET quantidade_em_estoque = quantidade_em_estoque - NEW.quantidade
+    WHERE id_produto = NEW.id_produto;
+END;
+//
+DELIMITER ;
+
+-- ste gatilho impede a exclusão de clientes com pagamentos pendentes.
+DELIMITER //
+CREATE TRIGGER VerificarPagamentosPendentes
+BEFORE DELETE ON clientes
+FOR EACH ROW
+BEGIN
+    DECLARE total_pagamentos INT;
+    SELECT COUNT(*) INTO total_pagamentos
+    FROM pedidos
+    WHERE id_cliente = OLD.id_cliente;
+    IF total_pagamentos > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Não é possível excluir clientes com pagamentos pendentes.';
+    END IF;
+END;
+//
+DELIMITER ;
+
+-- Este gatilho atualiza o total de vendas de uma categoria após a inserção de um novo pedido.
+DELIMITER //
+CREATE TRIGGER AtualizarTotalVendas
+AFTER INSERT ON itens_pedido
+FOR EACH ROW
+BEGIN
+    UPDATE categoria
+    SET total_vendas = total_vendas + NEW.quantidade
+    WHERE id_categoria = (
+        SELECT id_categoria
+        FROM produto
+        WHERE id_produto = NEW.id_produto
+    );
+END;
+//
+DELIMITER ;
+
+-- Este gatilho impede a atualização de produtos com preços negativos
+DELIMITER //
+CREATE TRIGGER EvitarPrecosNegativos
+BEFORE UPDATE ON produto
+FOR EACH ROW
+BEGIN
+    IF NEW.preco < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Não é permitido definir preços negativos.';
+    END IF;
+END;
+//
+DELIMITER ;
+
 -- para listar todos os clientes com seus pedidos:
 CREATE VIEW vw_clientes_pedidos AS
 SELECT c.id_cliente AS cliente_id, c.nome_completo, c.nome_preferido, c.cpf, c.data_nascimento, c.telefone, c.email, c.bairro, c.cidade, c.estado,
