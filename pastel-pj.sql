@@ -351,3 +351,67 @@ WHERE
     c.id_categoria = 2 
     AND TIMESTAMPDIFF(YEAR, cl.data_nascimento, CURDATE()) > 18;
 
+
+-- para listar todos os clientes com seus pedidos:
+CREATE VIEW vw_clientes_pedidos AS
+SELECT c.id_cliente AS cliente_id, c.nome_completo, c.nome_preferido, c.cpf, c.data_nascimento, c.telefone, c.email, c.bairro, c.cidade, c.estado,
+       p.id_pedido, p.data_pedido, p.id_cliente AS pedido_cliente_id, p.id_forma_pagamento
+FROM clientes c
+JOIN pedidos p ON c.id_cliente = p.id_cliente;
+SELECT cliente_id, nome_completo, nome_preferido, cpf, data_nascimento, telefone, email, bairro, cidade, estado,
+       id_pedido, data_pedido, pedido_cliente_id, id_forma_pagamento
+FROM vw_clientes_pedidos;
+
+-- View para mostrar os produtos mais vendidos:
+CREATE VIEW vw_produtos_mais_vendidos AS
+SELECT pr.nome, COUNT(ip.id_produto) AS total_vendido
+FROM produto pr
+JOIN itens_pedido ip ON pr.id_produto = ip.id_produto
+GROUP BY pr.nome
+ORDER BY total_vendido DESC;
+SELECT nome, total_vendido
+FROM vw_produtos_mais_vendidos;
+
+-- View para listar os pedidos de clientes com mais de 18 anos:
+CREATE VIEW vw_pedidos_maiores_18 AS
+SELECT p.*
+FROM pedidos p
+JOIN clientes c ON p.id_cliente = c.id_cliente
+WHERE YEAR(CURRENT_DATE()) - YEAR(c.data_nascimento) >= 18;
+SELECT * FROM vw_pedidos_maiores_18;
+
+-- Recheios Populares:
+CREATE VIEW vw_recheios_populares AS
+SELECT r.nome, COUNT(rp.id_produto) AS total_utilizado
+FROM recheio r
+JOIN recheio_produto rp ON r.id_recheio = rp.id_recheio
+GROUP BY r.nome
+ORDER BY total_utilizado DESC;
+SELECT * FROM vw_recheios_populares;
+
+-- produtos sem vendas
+CREATE VIEW vw_produtos_sem_venda AS
+SELECT pr.nome
+FROM produto pr
+LEFT JOIN itens_pedido ip ON pr.id_produto = ip.id_produto
+WHERE ip.id_produto IS NULL;
+select*from vw_produtos_sem_venda;
+
+-- Clientes que Mais Pedem Bebidas:
+CREATE VIEW vw_clientes_mais_pedem_bebidas AS
+SELECT c.nome_completo, COUNT(ip.id_produto) AS total_bebidas
+FROM clientes c
+JOIN pedidos p ON c.id_cliente = p.id_cliente
+JOIN itens_pedido ip ON p.id_pedido = ip.id_pedido
+JOIN produto pr ON ip.id_produto = pr.id_produto
+WHERE pr.id_categoria = 5  -- Assumindo que a categoria 5 representa bebidas
+GROUP BY c.nome_completo
+ORDER BY total_bebidas DESC;
+SELECT * FROM vw_clientes_mais_pedem_bebidas;
+
+-- Pedidos Realizados no Último Mês:
+CREATE VIEW vw_pedidos_ultimo_mes AS
+SELECT *
+FROM pedidos
+WHERE MONTH(data_pedido) = MONTH(CURRENT_DATE()) AND YEAR(data_pedido) = YEAR(CURRENT_DATE());
+SELECT * FROM vw_pedidos_ultimo_mes;
