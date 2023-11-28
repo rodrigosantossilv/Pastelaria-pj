@@ -501,7 +501,7 @@ BEGIN
     );
 END;
 //
-DELIMITER ;
+
 
 -- Este gatilho impede a atualização de produtos com preços negativos
 DELIMITER //
