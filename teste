@@ -39,14 +39,15 @@ CREATE TABLE pedidos (
 );
 
 CREATE TABLE produto (
-    id_produto int primary key auto_increment,
-    nome varchar(50),
-    preco decimal(8,2),
-    tamanho varchar(50),
-    id_categoria int not null,
-    foreign key (id_categoria) references categoria(id_categoria)
+    id_produto INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(50),
+    preco DECIMAL(8,2),
+    tamanho VARCHAR(50),
+    id_categoria INT NOT NULL,
+    id_recheio INT NULL,
+    FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria),
+    FOREIGN KEY (id_recheio) REFERENCES recheio(id_recheio)
 );
-
 CREATE TABLE recheio_produto (
     id_recheio_produto int primary key auto_increment,
     id_recheio int not null,
@@ -125,31 +126,45 @@ CREATE PROCEDURE AdicionarProduto(
     IN nome VARCHAR(50),
     IN preco DECIMAL(8,2),
     IN tamanho VARCHAR(50),
-    IN id_categoria INT
+    IN id_categoria INT,
+    IN id_recheio INT 
 )
 BEGIN
-    INSERT INTO produto (nome, preco, tamanho, id_categoria) 
-    VALUES (nome, preco, tamanho, id_categoria);
+    -- Verifica se id_recheio é nulo e atribui o valor padrão
+    IF id_recheio IS NULL THEN
+        SET id_recheio = null; -- Coloque o valor padrão desejado aqui
+    END IF;
+
+    -- Verifica se id_recheio ainda é nulo e insere na tabela com o valor padrão
+    IF id_recheio IS NULL THEN
+        INSERT INTO produto (nome, preco, tamanho, id_categoria) 
+        VALUES (nome, preco, tamanho, id_categoria);
+    ELSE
+        INSERT INTO produto (nome, preco, tamanho, id_categoria, id_recheio) 
+        VALUES (nome, preco, tamanho, id_categoria, id_recheio);
+    END IF;
 END //
-
 DELIMITER ;
-SELECT * FROM produto;
 
-CALL AdicionarProduto('Suco de laranja', 2.00, '1L', 5);
-CALL AdicionarProduto('Suco de laranja', 5.00, '2L', 5);
-CALL AdicionarProduto('Refrigerante de cola', 3.50, '1L', 5);
-CALL AdicionarProduto('Refrigerante de guaraná', 4.00, '1L', 5);
-CALL AdicionarProduto('Suco de morango', 7.00, '2L', 5);
-CALL AdicionarProduto('Suco de limão', 3.50, '1L', 5);
-CALL AdicionarProduto('Tubaina', 1.50, '350 ML', 5);
-CALL AdicionarProduto('Pastel de carne', 5.00, 'M', 1);
-CALL AdicionarProduto('Pastel de frango', 6.00, 'G', 1);
-CALL AdicionarProduto('Pastel de queijo', 6.00, 'G', 1);
-CALL AdicionarProduto('Pastel de palmito', 3.00, 'P', 2);
-CALL AdicionarProduto('Pastel de espinafre', 5.50, 'G', 2);
-CALL AdicionarProduto('Pastel de carne seca', 6.50, 'M', 4);
-CALL AdicionarProduto('Pastel de camarão', 6.50, 'M', 4);
-CALL AdicionarProduto('Pastel de bacalhau', 6.50, 'M', 4);
+
+CALL AdicionarProduto('Suco de laranja', 2.00, '1L', 5, null);
+CALL AdicionarProduto('Suco de laranja', 5.00, '2L', 5, null);
+CALL AdicionarProduto('Refrigerante de cola', 3.50, '1L', 5, null);
+CALL AdicionarProduto('Refrigerante de guaraná', 4.00, '1L', 5, null);
+CALL AdicionarProduto('Suco de morango', 7.00, '2L', 5, null);
+CALL AdicionarProduto('Suco de limão', 3.50, '1L', 5, null);
+CALL AdicionarProduto('Tubaina', 1.50, '350 ML', 5, null);
+CALL AdicionarProduto('Pastel de carne', 5.00, 'M', 1, 1);
+CALL AdicionarProduto('Pastel de frango', 6.00, 'G', 1, 2);
+CALL AdicionarProduto('Pastel de queijo', 6.00, 'G', 1, 3);
+CALL AdicionarProduto('Pastel de palmito', 3.00, 'P', 2, 4);
+CALL AdicionarProduto('Pastel de espinafre', 5.50, 'G', 2, 5);
+CALL AdicionarProduto('Pastel de Queijo com Goiabada', 6.50, 'M', 4, 9);
+CALL AdicionarProduto('Pastel de camarão', 6.50, 'M', 4, 6);
+CALL AdicionarProduto('Pastel de bacalhau', 6.50, 'M', 4, 7);
+CALL AdicionarProduto('Pastel de bacon', 6.50, 'M', 4,11);
+INSERT INTO recheio (nome) VALUES ('Bacon');
+SET @id_novo_recheio = LAST_INSERT_ID();
 
 SELECT * FROM categoria;
 SELECT * FROM recheio; 
@@ -174,6 +189,12 @@ CALL AdicionaRecheio(4, 4);
 CALL AdicionaRecheio(5, 5);
 CALL AdicionaRecheio(6, 6);
 CALL AdicionaRecheio(7, 7);
+CALL AdicionaRecheio(8, 8);
+CALL AdicionaRecheio(9, 9);
+CALL AdicionaRecheio(10, 10);
+CALL AdicionaRecheio(11, 11);
+
+SELECT * FROM recheio_produto;
 
 START TRANSACTION;
 INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (1, 1);
@@ -264,7 +285,6 @@ START TRANSACTION;
 INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (6, 1);
 SET @id_pedido_11 = LAST_INSERT_ID();
 INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_11, 12, 1);
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES SET @id_pedido_11 = LAST_INSERT_ID();
 INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_11, 7, 2);
 INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_11, 6, 1);
 COMMIT;
@@ -334,4 +354,195 @@ COMMIT;
 
 SELECT * FROM pedidos;
 SELECT * FROM itens_pedido;
+
+SELECT P.nome
+FROM produto AS P
+JOIN categoria AS C ON P.id_categoria = C.id_categoria
+JOIN itens_pedido AS IP ON P.id_produto = IP.id_produto
+JOIN pedidos AS PE ON IP.id_pedido = PE.id_pedido
+JOIN clientes AS CL ON PE.id_cliente = CL.id_cliente
+WHERE C.id_categoria = 2  -- Categoria de pastéis veganos
+AND TIMESTAMPDIFF(YEAR, CL.data_nascimento, CURRENT_DATE) > 18;
+ 
+ SELECT 
+    MONTH(data_pedido) AS mes,
+    YEAR(data_pedido) AS ano,
+    CL.nome_completo AS cliente,
+    COUNT(PE.id_pedido) AS numero_pedidos
+FROM pedidos AS PE
+JOIN clientes AS CL ON PE.id_cliente = CL.id_cliente
+WHERE YEAR(data_pedido) = 2023  -- Substitua 2023 pelo ano desejado
+GROUP BY YEAR(data_pedido), MONTH(data_pedido), CL.id_cliente
+ORDER BY numero_pedidos DESC;
+
+
+-- AJUDA AQUI
+SELECT P.nome AS nome_pastel
+FROM produto AS P
+JOIN recheio_produto AS RP1 ON P.id_produto = RP1.id_produto
+JOIN recheio AS R1 ON RP1.id_recheio = R1.id_recheio AND R1.nome = 'bacon'
+JOIN recheio_produto AS RP2 ON P.id_produto = RP2.id_produto
+JOIN recheio AS R2 ON RP2.id_recheio = R2.id_recheio AND R2.nome = 'queijo'
+WHERE P.id_categoria = 1; -- Substitua pelo ID da categoria desejada
+
+SELECT SUM(preco) AS valor_total_venda
+FROM produto;
+
+
+SELECT p.*
+FROM pedidos p
+WHERE EXISTS (
+    SELECT 1
+    FROM itens_pedido ip
+    JOIN produto pr ON ip.id_produto = pr.id_produto
+    WHERE pr.id_categoria IN (1, 2)  -- IDs das categorias de pastéis
+      AND ip.id_pedido = p.id_pedido
+)
+AND EXISTS (
+    SELECT 1
+    FROM itens_pedido ip2
+    JOIN produto pr2 ON ip2.id_produto = pr2.id_produto
+    WHERE pr2.id_categoria = 5  -- ID da categoria de bebidas
+      AND ip2.id_pedido = p.id_pedido
+);
+
+-- Este gatilho verifica se o cliente tem mais de 18 anos antes de inserir um novo cliente
+DELIMITER //
+CREATE TRIGGER VerificarIdade
+BEFORE INSERT ON clientes
+FOR EACH ROW
+BEGIN
+    IF DATEDIFF(CURRENT_DATE, NEW.data_nascimento) < 6570 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Clientes devem ter pelo menos 18 anos.';
+    END IF;
+END;
+//
+DELIMITER ;
+
+-- Este gatilho atualiza a quantidade em estoque após a inserção de um novo pedido
+DELIMITER //
+CREATE TRIGGER AtualizarEstoque
+AFTER INSERT ON itens_pedido
+FOR EACH ROW
+BEGIN
+    UPDATE produto
+    SET quantidade_em_estoque = quantidade_em_estoque - NEW.quantidade
+    WHERE id_produto = NEW.id_produto;
+END;
+//
+DELIMITER ;
+
+-- ste gatilho impede a exclusão de clientes com pagamentos pendentes.
+DELIMITER //
+CREATE TRIGGER VerificarPagamentosPendentes
+BEFORE DELETE ON clientes
+FOR EACH ROW
+BEGIN
+    DECLARE total_pagamentos INT;
+    SELECT COUNT(*) INTO total_pagamentos
+    FROM pedidos
+    WHERE id_cliente = OLD.id_cliente;
+    IF total_pagamentos > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Não é possível excluir clientes com pagamentos pendentes.';
+    END IF;
+END;
+//
+DELIMITER ;
+
+-- Este gatilho atualiza o total de vendas de uma categoria após a inserção de um novo pedido.
+DELIMITER //
+CREATE TRIGGER AtualizarTotalVendas
+AFTER INSERT ON itens_pedido
+FOR EACH ROW
+BEGIN
+    UPDATE categoria
+    SET total_vendas = total_vendas + NEW.quantidade
+    WHERE id_categoria = (
+        SELECT id_categoria
+        FROM produto
+        WHERE id_produto = NEW.id_produto
+    );
+END;
+//
+DELIMITER ;
+
+-- Este gatilho impede a atualização de produtos com preços negativos
+DELIMITER //
+CREATE TRIGGER EvitarPrecosNegativos
+BEFORE UPDATE ON produto
+FOR EACH ROW
+BEGIN
+    IF NEW.preco < 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Não é permitido definir preços negativos.';
+    END IF;
+END;
+//
+DELIMITER ;
+
+-- para listar todos os clientes com seus pedidos:
+CREATE VIEW vw_clientes_pedidos AS
+SELECT c.id_cliente AS cliente_id, c.nome_completo, c.nome_preferido, c.cpf, c.data_nascimento, c.telefone, c.email, c.bairro, c.cidade, c.estado,
+       p.id_pedido, p.data_pedido, p.id_cliente AS pedido_cliente_id, p.id_forma_pagamento
+FROM clientes c
+JOIN pedidos p ON c.id_cliente = p.id_cliente;
+SELECT cliente_id, nome_completo, nome_preferido, cpf, data_nascimento, telefone, email, bairro, cidade, estado,
+       id_pedido, data_pedido, pedido_cliente_id, id_forma_pagamento
+FROM vw_clientes_pedidos;
+
+-- View para mostrar os produtos mais vendidos:
+CREATE VIEW vw_produtos_mais_vendidos AS
+SELECT pr.nome, COUNT(ip.id_produto) AS total_vendido
+FROM produto pr
+JOIN itens_pedido ip ON pr.id_produto = ip.id_produto
+GROUP BY pr.nome
+ORDER BY total_vendido DESC;
+SELECT nome, total_vendido
+FROM vw_produtos_mais_vendidos;
+
+-- View para listar os pedidos de clientes com mais de 18 anos:
+CREATE VIEW vw_pedidos_maiores_18 AS
+SELECT p.*
+FROM pedidos p
+JOIN clientes c ON p.id_cliente = c.id_cliente
+WHERE YEAR(CURRENT_DATE()) - YEAR(c.data_nascimento) >= 18;
+SELECT * FROM vw_pedidos_maiores_18;
+
+-- Recheios Populares:
+CREATE VIEW vw_recheios_populares AS
+SELECT r.nome, COUNT(rp.id_produto) AS total_utilizado
+FROM recheio r
+JOIN recheio_produto rp ON r.id_recheio = rp.id_recheio
+GROUP BY r.nome
+ORDER BY total_utilizado DESC;
+SELECT * FROM vw_recheios_populares;
+
+-- produtos sem vendas
+CREATE VIEW vw_produtos_sem_venda AS
+SELECT pr.nome
+FROM produto pr
+LEFT JOIN itens_pedido ip ON pr.id_produto = ip.id_produto
+WHERE ip.id_produto IS NULL;
+select*from vw_produtos_sem_venda;
+
+-- Clientes que Mais Pedem Bebidas:
+CREATE VIEW vw_clientes_mais_pedem_bebidas AS
+SELECT c.nome_completo, COUNT(ip.id_produto) AS total_bebidas
+FROM clientes c
+JOIN pedidos p ON c.id_cliente = p.id_cliente
+JOIN itens_pedido ip ON p.id_pedido = ip.id_pedido
+JOIN produto pr ON ip.id_produto = pr.id_produto
+WHERE pr.id_categoria = 5  -- Assumindo que a categoria 5 representa bebidas
+GROUP BY c.nome_completo
+ORDER BY total_bebidas DESC;
+SELECT * FROM vw_clientes_mais_pedem_bebidas;
+
+-- Pedidos Realizados no Último Mês:
+CREATE VIEW vw_pedidos_ultimo_mes AS
+SELECT *
+FROM pedidos
+WHERE MONTH(data_pedido) = MONTH(CURRENT_DATE()) AND YEAR(data_pedido) = YEAR(CURRENT_DATE());
+SELECT * FROM vw_pedidos_ultimo_mes;
 
