@@ -331,4 +331,21 @@ JOIN itens_pedido ip ON p.id_produto = ip.id_produto
 GROUP BY p.nome
 ORDER BY quantidade_vendas ASC;
 
+--01
+SELECT
+    pe.id_pedido,
+    p.nome AS nome_do_pastel,
+    cl.nome_completo,
+    TIMESTAMPDIFF(YEAR, cl.data_nascimento, CURDATE()) AS idade
+FROM
+    produto p
+JOIN categoria c ON p.id_categoria = c.id_categoria
+JOIN recheio_produto rp ON p.id_produto = rp.id_produto
+JOIN recheio r ON rp.id_recheio = r.id_recheio
+JOIN itens_pedido ip ON p.id_produto = ip.id_produto
+JOIN pedidos pe ON ip.id_pedido = pe.id_pedido
+JOIN clientes cl ON pe.id_cliente = cl.id_cliente
+WHERE
+    c.id_categoria = 2 
+    AND TIMESTAMPDIFF(YEAR, cl.data_nascimento, CURDATE()) > 18;
 
