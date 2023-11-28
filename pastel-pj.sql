@@ -110,7 +110,6 @@ DELIMITER ;
 CALL AdicionarCliente('Rodigo da Silva', 'Rodrigo', '123.456.789-01', '2005-05-09', '123456789', 'rodrigo@email.com', 'humildes', 'FSA', 'BA');
 CALL AdicionarCliente('Carlos henrique', 'Carlos', '345.609.456-01', '2003-08-03', '750304859', 'carlos@email.com', 'Aviario', 'FSA', 'BA');
 CALL AdicionarCliente('Yasmin nere', 'Yasmin', '503.987.545-01', '2004-03-14', '75395030', 'carlos@email.com', 'feira 7', 'FSA', 'BA');
--- 😎
 CALL AdicionarCliente('Lucia Oliveira', 'Lucia', '789.456.123-45', '2008-09-25', '987654321', 'lucia@email.com', 'Centro', 'São Paulo', 'SP');
 CALL AdicionarCliente('Pedro Santos', 'Pedro', '987.654.321-01', '2010-03-12', '654321987', 'pedro@email.com', 'Bairro Alegre', 'Rio de Janeiro', 'RJ');
 CALL AdicionarCliente('Camila Silva', 'Camila', '234.567.890-12', '2009-08-18', '876543210', 'camila@email.com', 'Nova Cidade', 'Salvador', 'BA');
@@ -154,6 +153,9 @@ CALL AdicionarProduto('Pastel de espinafre', 5.50, 'G', 2);
 CALL AdicionarProduto('Pastel de carne seca', 6.50, 'M',4);
 CALL AdicionarProduto('Pastel de camarão', 6.50, 'M', 4);
 CALL AdicionarProduto('Pastel de bacalhau', 6.50, 'M', 4);
+INSERT INTO recheio (nome) VALUES ('Bacon');
+SET @id_novo_recheio = LAST_INSERT_ID();
+CALL AdicionarProduto('Pastel de bacon', 6.50, 'M', 4,11);
 
  
 
