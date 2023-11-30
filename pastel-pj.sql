@@ -371,14 +371,14 @@ SELECT SUM(preco * quantidade) AS valor_total_venda
 FROM produto
 JOIN itens_pedido ON produto.id_produto = itens_pedido.id_produto;
 
--- 6 antes que eu me esqueça
+
 SELECT p.nome AS pastel, COUNT(ip.id_item) AS quantidade_vendas
 FROM produto p
 JOIN itens_pedido ip ON p.id_produto = ip.id_produto
 GROUP BY p.nome
 ORDER BY quantidade_vendas ASC;
 
---01
+
 SELECT
     pe.id_pedido,
     p.nome AS nome_do_pastel,
@@ -578,3 +578,32 @@ SELECT *
 FROM pedidos
 WHERE MONTH(data_pedido) = MONTH(CURRENT_DATE()) AND YEAR(data_pedido) = YEAR(CURRENT_DATE());
 SELECT * FROM vw_pedidos_ultimo_mes;
+
+
+-- Clientes e seus Pedidos no Último Mês:
+CREATE VIEW vw_clientes_pedidos_ultimo_mes AS
+SELECT c.id_cliente AS cliente_id, c.nome_completo, c.nome_preferido, c.cpf, c.data_nascimento, c.telefone, c.email, c.bairro, c.cidade, c.estado,
+       p.id_pedido, p.data_pedido, p.id_cliente AS pedido_cliente_id, p.id_forma_pagamento
+FROM clientes c
+JOIN pedidos p ON c.id_cliente = p.id_cliente
+WHERE MONTH(p.data_pedido) = MONTH(CURRENT_DATE()) AND YEAR(p.data_pedido) = YEAR(CURRENT_DATE());
+
+-- Total de Vendas por Categoria no Último Mês:
+CREATE VIEW vw_total_vendas_categoria_ultimo_mes AS
+SELECT c.nome AS categoria, SUM(ip.quantidade) AS total_vendido
+FROM categoria c
+JOIN produto pr ON c.id_categoria = pr.id_categoria
+LEFT JOIN itens_pedido ip ON pr.id_produto = ip.id_produto
+LEFT JOIN pedidos p ON ip.id_pedido = p.id_pedido
+WHERE MONTH(p.data_pedido) = MONTH(CURRENT_DATE()) AND YEAR(p.data_pedido) = YEAR(CURRENT_DATE())
+GROUP BY c.nome
+ORDER BY total_vendido DESC;
+SELECT * FROM vw_total_vendas_categoria_ultimo_mes ;
+
+-- Retorna a quantidade total de pedidos realizados por cada cliente no último mês:
+SELECT cl.nome_completo AS cliente, COUNT(pe.id_pedido) AS total_pedidos
+FROM clientes cl
+JOIN pedidos pe ON cl.id_cliente = pe.id_cliente
+WHERE MONTH(pe.data_pedido) = MONTH(CURRENT_DATE()) AND YEAR(pe.data_pedido) = YEAR(CURRENT_DATE())
+GROUP BY cl.id_cliente, cliente
+ORDER BY total_pedidos DESC;
