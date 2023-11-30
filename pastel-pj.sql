@@ -409,7 +409,7 @@ GROUP BY YEAR(data_pedido), MONTH(data_pedido), CL.id_cliente
 ORDER BY numero_pedidos DESC;
 
 
--- AJUDA AQUI
+-- AJUDA AQUI --------------
 SELECT P.nome AS nome_pastel
 FROM produto AS P
 JOIN recheio_produto AS RP1 ON P.id_produto = RP1.id_produto
@@ -417,9 +417,6 @@ JOIN recheio AS R1 ON RP1.id_recheio = R1.id_recheio AND R1.nome = 'bacon'
 JOIN recheio_produto AS RP2 ON P.id_produto = RP2.id_produto
 JOIN recheio AS R2 ON RP2.id_recheio = R2.id_recheio AND R2.nome = 'queijo'
 WHERE P.id_categoria = 1; -- Substitua pelo ID da categoria desejada
-
-SELECT SUM(preco) AS valor_total_venda
-FROM produto;
 
 
 SELECT p.*
