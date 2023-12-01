@@ -157,18 +157,22 @@ CALL AdicionarProduto('Pastel de carne', 5.00, 'M', 1, 1);
 CALL AdicionarProduto('Pastel de frango', 6.00, 'G', 1, 2);
 CALL AdicionarProduto('Pastel de queijo', 6.00, 'G', 1, 3);
 CALL AdicionarProduto('Pastel de palmito', 3.00, 'P', 2, 4);
+CALL AdicionarProduto('Pastel de queijo qualho', 6.00, 'G', 1, 3);
 CALL AdicionarProduto('Pastel de espinafre', 5.50, 'G', 2, 5);
 CALL AdicionarProduto('Pastel de Queijo com Goiabada', 6.50, 'M', 4, 9);
 CALL AdicionarProduto('Pastel de camarão', 6.50, 'M', 4, 6);
 CALL AdicionarProduto('Pastel de bacalhau', 6.50, 'M', 4, 7);
+CALL AdicionarProduto('Pastel de dora aventureira', 6.50, 'M', 4, 7);
 INSERT INTO recheio (nome) VALUES ('Bacon');
 SET @id_novo_recheio = LAST_INSERT_ID();
 CALL AdicionarProduto('Pastel de bacon', 6.50, 'M', 4,11);
+CALL AdicionarProduto('Pastel de PEPPA PIG', 7.00, 'G', 4,11);
 
 
 SELECT * FROM categoria;
 SELECT * FROM recheio; 
 SELECT * FROM produto;
+SELECT * FROM pedidos;
 
 DELIMITER //
 CREATE PROCEDURE AdicionaRecheio(
@@ -200,7 +204,15 @@ START TRANSACTION;
 INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (1, 1);
 SET @id_pedido_rodrigo = LAST_INSERT_ID();
 
-INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_rodrigo, 10, 2);  -- Suco de laranja (2 unidades)
+INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_rodrigo, 3, 2);  -- Suco de laranja (2 unidades)
+INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_rodrigo, 11, 1);  -- Refrigerante de guaraná (1 unidade)
+COMMIT;
+
+START TRANSACTION;
+INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (1, 2);
+SET @id_pedido_rodrigo = LAST_INSERT_ID();
+
+INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_rodrigo, 11, 2);  -- Suco de laranja (2 unidades)
 INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_rodrigo, 12, 1);  -- Refrigerante de guaraná (1 unidade)
 COMMIT;
 
@@ -352,7 +364,23 @@ INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_
 INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido_20, 6, 1);
 COMMIT;
 
-select * from pedidos;
+-- Faça o primeiro pedido
+START TRANSACTION;
+INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (1, 1);
+SET @id_pedido1 = LAST_INSERT_ID();
+
+INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido1, 16, 2); 
+COMMIT;
+
+-- Faça o segundo pedido
+START TRANSACTION;
+INSERT INTO pedidos (id_cliente, id_forma_pagamento) VALUES (2, 2);
+SET @id_pedido2 = LAST_INSERT_ID();
+
+INSERT INTO itens_pedido (id_pedido, id_produto, quantidade) VALUES (@id_pedido2, 17, 2);  -- Pastel de PEPPA PIG (2 unidades)
+COMMIT;
+
+select * from categoria;
 
 
 SELECT 
@@ -408,16 +436,12 @@ WHERE YEAR(data_pedido) = 2023  -- Substitua 2023 pelo ano desejado
 GROUP BY YEAR(data_pedido), MONTH(data_pedido), CL.id_cliente
 ORDER BY numero_pedidos DESC;
 
-
--- AJUDA AQUI --------------
-SELECT P.nome AS nome_pastel
-FROM produto AS P
-JOIN recheio_produto AS RP1 ON P.id_produto = RP1.id_produto
-JOIN recheio AS R1 ON RP1.id_recheio = R1.id_recheio AND R1.nome = 'bacon'
-JOIN recheio_produto AS RP2 ON P.id_produto = RP2.id_produto
-JOIN recheio AS R2 ON RP2.id_recheio = R2.id_recheio AND R2.nome = 'queijo'
-WHERE P.id_categoria = 1; -- Substitua pelo ID da categoria desejada
-
+SELECT 
+    nome AS nome_pastel
+FROM recheio_produto AS rp
+JOIN produto AS pr ON pr.id_produto = rp.id_produto
+WHERE pr.id_recheio IN (11, 3);
+select*from recheio_produto;
 
 SELECT p.*
 FROM pedidos p
